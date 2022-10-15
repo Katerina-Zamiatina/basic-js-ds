@@ -1,49 +1,137 @@
-const { NotImplementedError } = require('../extensions/index.js');
+const { NotImplementedError } = require("../extensions/index.js");
 
-// const { Node } = require('../extensions/list-tree.js');
+const { Node } = require("../extensions/list-tree.js");
 
 /**
-* Implement simple binary search tree according to task description
-* using Node from extensions
-*/
+ * Implement simple binary search tree according to task description
+ * using Node from extensions
+ */
 class BinarySearchTree {
+  constructor() {
+    this.head = null;
+  }
 
   root() {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
+    return this.head;
   }
 
-  add(/* data */) {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
+  add(data) {
+    this.head = addValue(this.head, data);
+
+    function addValue(node, data) {
+      if (!node) {
+        return new Node(data);
+      }
+
+      if (node.data === data) {
+        return node;
+      }
+
+      data < node.data
+        ? (node.left = addValue(node.left, data))
+        : (node.right = addValue(node.right, data));
+
+      return node;
+    }
   }
 
-  has(/* data */) {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
+  has(data) {
+    function hasValue(node, data) {
+      if (!node) {
+        return false;
+      }
+
+      if (node.data === data) {
+        return true;
+      }
+
+      return data < node.data
+        ? hasValue(node.left, data)
+        : hasValue(node.right, data);
+    }
+
+    return hasValue(this.head, data);
   }
 
-  find(/* data */) {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
+  find(data) {
+    return findValue(this.head, data);
+
+    function findValue(node, data) {
+      if (!node) {
+        return null;
+      }
+
+      if (node.data === data) {
+        return node;
+      }
+
+      if (data < node.data) {
+        return findValue(node.left, data);
+      } else {
+        return findValue(node.right, data);
+      }
+    }
   }
 
-  remove(/* data */) {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
+  remove(data) {
+    this.head = removeValue(this.head, data);
+
+    function removeValue(node, data) {
+      if (!node) {
+        return null;
+      }
+      if (node.data > data) {
+        node.left = removeValue(node.left, data);
+        return node;
+      } else if (node.data < data) {
+        node.right = removeValue(node.right, data);
+        return node;
+      } else {
+        if (!node.left && !node.right) {
+          return null;
+        }
+        if (!node.left) {
+          node = node.right;
+          return node;
+        }
+        if (!node.right) {
+          node = node.left;
+          return node;
+        }
+        let minRight = node.right;
+        while (minRight.left) {
+          minRight = minRight.left;
+        }
+        node.data = minRight.data;
+        node.right = removeValue(node.right, minRight.data);
+        return node;
+      }
+    }
   }
 
   min() {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
+    if (!this.head) {
+      return;
+    }
+    let node = this.head;
+    while (node.left !== null) {
+      node = node.left;
+    }
+    return node.data;
   }
 
   max() {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
+    // if (!this.head) {
+    //   return;
+    // }
+    let node = this.head;
+    while (node.right) {
+      node = node.right;
+    }
+    return node.data;
   }
 }
 
 module.exports = {
-  BinarySearchTree
+  BinarySearchTree,
 };
